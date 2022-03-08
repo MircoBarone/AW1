@@ -63,8 +63,19 @@ this.afterDate= function(date)
                             return vettore5;
 
                             }
+//scrivo una Callback
 
-                          
+this.filter=function(callback) {
+   //se la funzione che mi viene passata che4 lavora sugli oggetti exam ritona vera restituisco il valore.
+                              let vett6=[];
+                              for( const e of this.vettore)
+                               { if(callback(e))
+                                vett6.push(e);
+                              
+                              }
+                              return vett6;
+
+}
                             }
                   
 
@@ -73,16 +84,20 @@ let Lista= new ExamList();
 Lista.add(Esame1);
 let Esame2= new Exam("BBB","DataBase",8,30,false,dayjs("2019-03-03"));
 Lista.add(Esame2);
-console.log(Lista);
+//console.log(Lista);
 let ricerca=Lista.find("AAA");
-console.log(ricerca);
+//console.log(ricerca);
 ricerca=Lista.find("CCC");
-console.log(ricerca);
+//console.log(ricerca);
 let Esame3= new Exam("CCC","Elettronica",6,21,false,dayjs("2020-03-03"));
 Lista.add(Esame3);
-console.log(Lista.average());
+//console.log(Lista.average());
 //console.log(Lista.listbyscore());
-console.log(Lista.listbydate());
-console.log(Lista.afterDate(dayjs("2020-01-01")));
+//console.log(Lista.listbydate());
+//console.log(Lista.afterDate(dayjs("2020-01-01")));
+
+const e2=Lista.filter((e)=>(e.score>27));
+
+console.log(e2);
 
 
