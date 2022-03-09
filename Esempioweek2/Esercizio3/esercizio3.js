@@ -76,13 +76,40 @@ this.filter=function(callback) {
                               return vett6;
 
 }
+this.afterDatewc= function(callback)
+                            {    return this.vettore.filter(callback);
+
+                            }
+                            
+this.listbydatewc= function(callback)
+                            { let vettore2=[...this.vettore];
+                             return vettore2.sort(callback);
+                            }
+
+this.increaseVote= function() { return this.vettore.map((elemento)=>
+  
+  {  //Nota di solito non si modifica direttamente l'oggetto si crea un oggetto nuovo
+     //Il problema esiste solo con gli oggetti che sono dei puntatori, dentro la map gli oggetti si creano.
+     let elemento2={...elemento};
+     elemento2.score=(elemento2.score+5); 
+    if(elemento2.score>30) {elemento2.score=elemento2.score-30;}
+  
+  
+  
+  
+  return elemento2;})  }
+
+
+
+
+
                             }
                   
 
 
 let Lista= new ExamList();
 Lista.add(Esame1);
-let Esame2= new Exam("BBB","DataBase",8,30,false,dayjs("2019-03-03"));
+let Esame2= new Exam("BBB","DataBase",8,30,false,dayjs("2021-03-03"));
 Lista.add(Esame2);
 //console.log(Lista);
 let ricerca=Lista.find("AAA");
@@ -96,8 +123,22 @@ Lista.add(Esame3);
 //console.log(Lista.listbydate());
 //console.log(Lista.afterDate(dayjs("2020-01-01")));
 
-const e2=Lista.filter((e)=>(e.score>27));
+//const e2=Lista.filter((e)=>(e.score>27));
 
-console.log(e2);
+//console.log(e2);
+
+//let giorno=dayjs("2020-01-01");
+//let risultato=Lista.afterDatewc((x)=>{if(x.Date.diff(giorno)<0) return true; else return false;});
+//console.log(risultato);
+
+//let risultato=Lista.listbydatewc(function(a,b) { return a.Date.diff(b.Date)});
+//console.log(risultato);
+
+console.log(Lista.increaseVote());
+console.log(Lista.vettore);
+
+
+
+
 
 
