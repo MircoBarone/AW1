@@ -3,7 +3,10 @@ const dayjs=require("dayjs");  //basta il file package.json poi digiti npm insta
 //costruttore Film
 
 const Film=function(id,title,favorites,date,rating)
-{  this.id=id
+{  
+   if(id===undefined||title===undefined)
+   {return ;}
+   this.id=id
    this.title=title;
    this.favorites=favorites||false;
    this.date=date;
@@ -15,7 +18,8 @@ const Library=function()
 {  this.vettore=[];
     
    this.add=function(Film)
-   {  this.vettore.push(Film);
+   {  if(Film.id===undefined) {return;}
+      this.vettore.push(Film);
 
    }
 
@@ -103,6 +107,20 @@ Libreria1.add(Film1);
 //console.log("STAMPA COMPLETA VETTORE CONFRONTO");
 
 //console.log(Libreria1.vettore);
+
+
+//prova casi particolari--Film senza Id o senza titolo
+
+Film1= new Film();
+let Film2=new Film("AAA");
+
+console.log(Film1);
+console.log(Film2);
+
+Libreria1.add(Film1);
+Libreria1.add(Film2);
+
+console.log(Libreria1.vettore);
 
 
 
