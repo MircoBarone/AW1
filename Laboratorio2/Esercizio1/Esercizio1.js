@@ -10,6 +10,9 @@ const db=new sqlite.Database("films.db", (err)=>{if(err) { console.log("Errore")
 
 
 
+
+
+
 //costruttore Film
 
 const Film=function(id,title,favorites,date,rating)
@@ -149,6 +152,90 @@ const Library=function()
                          )
    }
 
+   this.storeDataBase= function(Film)
+   {  
+      return new Promise((resolve,reject)=>{
+      if(Film.id==undefined)
+      {
+         reject(new Error("Hai inserito un film vuoto"));
+      }
+      if(Film.title===undefined)
+      {
+         reject(new Error("Necessario specificare il nome del Film"));
+      }
+
+
+
+      db.run("insert into films(id,title,favorite,watchdate,rating) values (?,?,?,?,?)",[Film.id,Film.title,Film.favorites,Film.date.format("YYYY-MM-DD"),Film.rating],
+                                 (err) =>{if(err) {reject(err);}
+                                          else     {resolve(`Inserito il film ${Film.title} con id ${Film.id}`)}
+                                 
+                                         
+                                                
+                                                }
+                        )
+                                           }
+      
+      
+      
+                         )
+   }
+
+   this.deleteDataBase= function(id)
+   {  
+      return new Promise((resolve,reject)=>{
+      if(id<0)
+      {
+         reject(new Error("Hai inserito un id negativo,non ha senso"));
+      }
+      
+
+
+
+      db.run("delete from films where id=?",id,
+                                function (err) {if(err) {reject(new Error("Cancellazione fallita;"));}
+                                            else {  if(this.changes===0) resolve("Nessuna cancellazione");
+                                                       
+                                                   resolve(`Ho cancellato la riga con id ${id} `)}    
+                                                }
+                        )
+                                           }
+      
+      
+      
+                         )
+   }
+
+
+   this.deletedatafromDataBase= function()
+   {  
+      return new Promise((resolve,reject)=>{
+    
+      
+
+
+
+      db.run("update films set watchdate=NULL where watchdate is not NULL",
+              function (err) {if(err) {reject(new Error("Cancellazione fallita;"));}
+                                            else {  if(this.changes===0) resolve("Nessuna cancellazione");
+                                                       
+                                                   resolve(`Ho cancellato la data in un numero di righe pari a  ${this.changes} `)}    
+                                                }
+                        )
+                                           }
+      
+      
+      
+                         )
+   }
+
+
+
+
+
+
+
+
 
 
 }
@@ -217,9 +304,13 @@ Libreria1.add(Film1);
 //Libreria1.add(Film2);
 
 //console.log(Libreria1.vettore);
-
+//batteria di test
 let test=async function()
-{  console.log("Test1");
+{  
+   
+   
+   
+   console.log("Test1");
    await Libreria1.getDataBase().then((x)=>{console.log(x)}).catch((x)=>{console.log(x.toString())});
    console.log("Test2");
    await Libreria1.getDataBaseFav().then((x)=>{console.log(x)}).catch((x)=>{console.log(x.toString())});
@@ -235,8 +326,34 @@ let test=async function()
    await Libreria1.getDataBasescore(8).then((x)=>{console.log(x)}).catch((x)=>{ console.log("ERRORE:",x.toString());});
    console.log("Test8");
    await Libreria1.getDataBasename("Forrest Gump").then((x)=>{console.log(x)}).catch((x)=>{ console.log("ERRORE:",x.toString());});
+   console.log("Test9");
+   await Libreria1.deleteDataBase(1).then((x)=>{console.log(x)}).catch((x)=>{console.log("ERRORE",x.toString())});
+   console.log("Test10");
+   await Libreria1.deleteDataBase(4).then((x)=>{console.log(x)}).catch((x)=>{console.log("ERRORE",x.toString())});
+   console.log("Test11");
+   await Libreria1.deleteDataBase(9).then((x)=>{console.log(x)}).catch((x)=>{console.log("ERRORE",x.toString())});
+   console.log("Test12");
+   await Libreria1.deleteDataBase(-11).then((x)=>{console.log(x)}).catch((x)=>{console.log("ERRORE",x.toString())});
+   console.log("Test13");
+   await Libreria1.deletedatafromDataBase().then((x)=>{console.log(x)}).catch((x)=>{console.log("ERRORE",x.toString())});
+   console.log("Test14");
+   await Libreria1.deletedatafromDataBase().then((x)=>{console.log(x)}).catch((x)=>{console.log("ERRORE",x.toString())});
+   console.log("Test15");
+   await Libreria1.getDataBasename("Shrek").then((x)=>{console.log(x)}).catch((x)=>{ console.log("ERRORE:",x.toString());});
+   console.log("Test16");
+   await Libreria1.storeDataBase(new Film(7,"Forrest Gump",1,dayjs("2020-11-02"),5)).then((x)=>{console.log(x)}).catch((x)=>{ console.log("ERRORE:",x.toString());});
+   console.log("Test17");
+   await Libreria1.getDataBaseFav().then((x)=>{console.log(x)}).catch((e)=>{console.log(e)});
+   console.log("Test18");
+   await Libreria1.storeDataBase(new Film(5,"Interstellar",1,dayjs("2022-01-02"),5)).then((x)=>{console.log(x)}).catch((x)=>{ console.log("ERRORE:",x.toString());});
+   console.log("Test19");
+   await Libreria1.storeDataBase(new Film(9,"Forrest Gump",1,dayjs("2020-11-02"),5)).then((x)=>{console.log(x)}).catch((x)=>{ console.log("ERRORE:",x.toString());});
+   console.log("Test20");
+   await Libreria1.storeDataBase(new Film()).then((x)=>{console.log(x)}).catch((x)=>{ console.log("ERRORE:",x.toString());});
+   console.log("Test21");
+   await Libreria1.storeDataBase(new Film(11)).then((x)=>{console.log(x)}).catch((x)=>{ console.log("ERRORE:",x.toString());}); 
 }
-test().catch((x)=>{console.log(x);});
+test().catch((x)=>{console.log(x);}).finally(()=>{console.log("Chiusura Database");db.close()});
 
 
 
