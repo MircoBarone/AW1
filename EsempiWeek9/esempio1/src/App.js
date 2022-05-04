@@ -1,8 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { Container, Row, Col } from 'react-bootstrap';
+
 import dayjs from 'dayjs';
 import { ExamScores } from './ExamScores';
+import {BrowserRouter,Routes,Route} from "react-router-dom"
+import ExamForm from './ExamForm';
+import { useState } from 'react';
 
 const fakeExams = [
   { code: '01TYMOV', name: 'Information systems security', score: 30, date: dayjs('2022-02-01') },
@@ -11,19 +14,34 @@ const fakeExams = [
 ];
 
 function App() {
+  const[exams,setExams]=useState(fakeExams);
+  
+  function addExam(exam) {
+    setExams( oldExams => [...oldExams, exam] );
+    
+  }
+
+  function updateExam(exam) {
+    setExams(exams => exams.map(
+      e => (e.code === exam.code) ? Object.assign({}, exam) : e
+    ));
+    
+  }
+  function deleteExam(code) {
+    // setExams(...)   // remove exam
+    setExams( exams.filter( (e)=> e.code !== code ) );
+  }
+
+
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h1>My Exams</h1>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <ExamScores exams={fakeExams}></ExamScores>
-        </Col>
-      </Row>
-    </Container>
+    <BrowserRouter>
+    <Routes>
+    <Route path="/"  element={<ExamScores exams={exams} deleteExam={deleteExam}/>}/>
+    <Route path="/add" element={<ExamForm addExam={addExam} exams={exams}/>}/>
+    <Route path="/edit/:examId" element={<ExamForm exams={exams} updateExam={updateExam}/>}/>
+    </Routes>
+    
+    </BrowserRouter>
   );
 }
 
