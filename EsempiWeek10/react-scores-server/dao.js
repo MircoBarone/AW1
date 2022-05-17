@@ -24,6 +24,7 @@ exports.listCourses = () => {
 };
 
 // get the course identified by {code}
+//puoi avere un eerore se il corso non esiste
 exports.getCourse = (code) => {
   return new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM course WHERE code=?';
